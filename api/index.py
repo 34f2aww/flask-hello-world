@@ -63,7 +63,7 @@ def get_transcript(video_id):
         json_transcript = formatter.format_transcript(transcript)
 
         # Writing the transcript to a file
-        filename = f"{video_id}_transcript.json"
+        filename = f"/tmp/" +f"{video_id}_transcript.json"
         with open(filename, "w", encoding="utf-8") as file:
             file.write(json_transcript)
 
