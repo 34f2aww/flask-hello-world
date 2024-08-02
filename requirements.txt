@@ -1,10 +1,10 @@
 Flask==3.0.0
 youtube-transcript-api
 requests
-pytube
-cohere
-openai
-openai-whisper
+# pytube
+# cohere
+# openai
+# openai-whisper
 #google-cloud-storage
 # testing
 # mock==3.0.5
