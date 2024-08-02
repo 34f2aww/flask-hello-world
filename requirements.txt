@@ -4,7 +4,7 @@ requests
 pytube
 cohere
 openai
-whisper
+openai-whisper
 #google-cloud-storage
 # testing
 # mock==3.0.5
