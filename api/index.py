@@ -15,7 +15,7 @@ app = Flask(__name__)
 def get_transcript(video_id):
     try:
         # Fetching the transcript
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'zh'])
 
         # Formatting the transcript into JSON
         formatter = JSONFormatter()
