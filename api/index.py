@@ -1,6 +1,7 @@
 from flask import Flask, send_file, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import JSONFormatter
+from youtube_transcript_api.formatters import TextFormatter
 
 import os
 
@@ -18,7 +19,9 @@ def get_transcript(video_id):
         transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'zh'])
 
         # Formatting the transcript into JSON
-        formatter = JSONFormatter()
+        #formatter = JSONFormatter()
+        #json_transcript = formatter.format_transcript(transcript)
+        formatter = TextFormatter()
         json_transcript = formatter.format_transcript(transcript)
 
         # Writing the transcript to a file
