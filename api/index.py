@@ -3,7 +3,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 #from youtube_transcript_api.formatters import JSONFormatter
 from youtube_transcript_api.formatters import TextFormatter
 
-import os
+from os import getenv
 
 # for videos without subtitles #
 #import whisper
@@ -14,48 +14,45 @@ app = Flask(__name__)
 
 @app.route('/<video_id>', methods=['GET'])
 def get_transcript(video_id):
-    try:
-        # Fetching the transcript
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'zh', 'zh-CN'])
+    username=getenv('USERNAME')
+    password=getenv('PASSWORD')
 
-        # Formatting the transcript into JSON
-        #formatter = JSONFormatter()
-        #json_transcript = formatter.format_transcript(transcript)
-        formatter = TextFormatter()
-        json_transcript = formatter.format_transcript(transcript)
+    MAX_RETRIES = 10  # Define the maximum number of attempts
+    success = False   # Track success
 
-        # Writing the transcript to a file
-        filename = f"/tmp/" +f"{video_id}_transcript.json"
-        with open(filename, "w", encoding="utf-8") as file:
-            file.write(json_transcript)
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            # Fetching the transcript
+            transcript = YouTubeTranscriptApi.get_transcript(video_id, proxies={"http": f"http://{username}:{password}@p.webshare.io:80"},languages=['en', 'zh', 'zh-CN'])
 
-        # Return the file
-        return send_file(filename, as_attachment=True)
+            # Formatting the transcript into JSON
+            #formatter = JSONFormatter()
+            #json_transcript = formatter.format_transcript(transcript)
 
-    except Exception as e: # if video has no subtitles
-        # try:
-        #     url = f"https://www.youtube.com/watch?v={video_id}"
-        #     yt = YouTube(url)
-        #     # Get the audio stream
-        #     audio_stream = yt.streams.filter(only_audio=True).first()
-        #     # Download the audio stream
-        #     audio_stream.download(output_paht="/tmp", filename=f"{video_id}.mp3")
+            # Formatting the transcript into TEXT
+            success = True
+            formatter = TextFormatter()
+            txt_transcript = formatter.format_transcript(transcript)
 
-        #     # Load the model
-        #     model = whisper.load_model("base")
-        #     result = model.transcribe(f"/tmp/{video_id}.mp3")
-        #     transcribed_text = result["text"]
+            # Writing the transcript to a file
+            filename = f"/tmp/" +f"{video_id}_transcript.txt"
+            with open(filename, "w", encoding="utf-8") as file:
+                file.write(txt_transcript)
 
-        #     # Create and open a txt file with the text
-        #     filename = f"/tmp/" +f"{video_id}_whisper_tran.txt"
-        #     with open(filename, "w", encoding="utf-8") as file:
-        #         file.write(transcribed_text)
+            # Return the file
+            return send_file(filename, as_attachment=True)
+        except Exception as e: 
+            print(f"Attempt {attempt} failed with error: {e}")
 
-        #     # Return the file
-        #     return send_file(filename, as_attachment=True)
-
-        # except Exception as n:
+    if not success:
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+# from pytube import YouTube
+# yt = YouTube('video_URL')
+# audio = yt.streams.filter(only_audio=True).first()
+# audio.download()
