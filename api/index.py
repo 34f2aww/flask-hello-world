@@ -1,4 +1,4 @@
-from flask import Flask, send_file, jsonify
+from flask import Flask, send_file, jsonify, request
 from youtube_transcript_api import YouTubeTranscriptApi
 #from youtube_transcript_api.formatters import JSONFormatter
 from youtube_transcript_api.formatters import TextFormatter
@@ -18,11 +18,12 @@ app = Flask(__name__)
 # audio.download()
 
 
-@app.route('/<video_id>', methods=['GET'])
-def get_transcript(video_id):
-    if video_id == 'favicon.ico':
-        return ''
+@app.route('/', methods=['GET'])
+def get_transcript():
+    video_id = request.args.get('vid')
     
+    if not video_id:
+        return {"OK"}, 201    
 
     username=getenv('USERNAME')
     password=getenv('PASSWORD')
