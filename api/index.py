@@ -20,6 +20,10 @@ app = Flask(__name__)
 
 @app.route('/<video_id>', methods=['GET'])
 def get_transcript(video_id):
+    if video_id == 'favicon.ico':
+        return ''
+    
+
     username=getenv('USERNAME')
     password=getenv('PASSWORD')
 
