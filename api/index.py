@@ -12,6 +12,12 @@ from os import getenv
 # for videos without subtitles #
 app = Flask(__name__)
 
+# from pytube import YouTube
+# yt = YouTube('video_URL')
+# audio = yt.streams.filter(only_audio=True).first()
+# audio.download()
+
+
 @app.route('/<video_id>', methods=['GET'])
 def get_transcript(video_id):
     username=getenv('USERNAME')
@@ -35,7 +41,7 @@ def get_transcript(video_id):
             txt_transcript = formatter.format_transcript(transcript)
 
             # Writing the transcript to a file
-            filename = f"/tmp/" +f"{video_id}_transcript.txt"
+            filename = f"/tmp/{video_id}_transcript.txt"
             with open(filename, "w", encoding="utf-8") as file:
                 file.write(txt_transcript)
 
@@ -49,10 +55,3 @@ def get_transcript(video_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-# from pytube import YouTube
-# yt = YouTube('video_URL')
-# audio = yt.streams.filter(only_audio=True).first()
-# audio.download()
