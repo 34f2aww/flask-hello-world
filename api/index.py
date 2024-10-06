@@ -1,6 +1,6 @@
 from flask import Flask, send_file, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api.formatters import JSONFormatter
+#from youtube_transcript_api.formatters import JSONFormatter
 from youtube_transcript_api.formatters import TextFormatter
 
 import os
