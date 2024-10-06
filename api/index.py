@@ -49,9 +49,10 @@ def get_transcript(video_id):
             return send_file(filename, as_attachment=True)
         except Exception as e: 
             print(f"Attempt {attempt} failed with error: {e}")
+            error_message = str(e)
 
     if not success:
-        return jsonify({'error': str(e)}), 400
+        return jsonify({'error': error_message}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
